@@ -1,6 +1,9 @@
 package com.mani.parser;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -13,20 +16,66 @@ import java.util.List;
  */
 public abstract class AbstractParser implements Parser
 {
-	private final String filePath;
+	private final String inputFilePath;
 
-	AbstractParser(String filePath)
+	AbstractParser(String inputFilePath)
 	{
-		this.filePath = filePath;
+ 		this.inputFilePath = inputFilePath;
 	}
 
 	@Override
 	public List<Node> doParse()
 	{
-		return doParseTags(readFile(filePath, Integer.MAX_VALUE));
+		return doParseNodes(readFile(inputFilePath, Integer.MAX_VALUE));
 	}
 
-	public abstract List<Node> doParseTags(List<String> lines);
+	@Override
+	public boolean marshaller(List<Node> nodes)
+	{
+		String outputFilePath = this.getClass().getResource(inputFilePath).getFile().split("\\.(?=[^\\.]+$)")[0] + "_output.xml";
+		File outputFile = new File(outputFilePath);
+		BufferedWriter bw = null;
+		try
+		{
+			if (!outputFile.exists())
+				outputFile.createNewFile();
+			bw = new BufferedWriter(new FileWriter(outputFile.getAbsoluteFile()));
+
+			//XMLMarshaller
+			xmlMarshaller(nodes, bw);
+		}
+		catch (IOException e)
+		{
+			System.err.println("Unable to write file " + outputFile.getAbsoluteFile());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e)
+		{
+			System.err.println("Unable to find file, check file path");
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (bw != null)
+			{
+				try
+				{
+					bw.close();
+				}
+				catch (IOException e)
+				{
+					System.err.println("Unable to close file " + outputFile.getAbsoluteFile());
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public abstract List<Node> doParseNodes(List<String> lines);
+
+	public abstract void xmlMarshaller(List<Node> nodes, BufferedWriter bw) throws IOException;
 
 	private List<String> readFile(String filePath, int limitCount)
 	{
@@ -46,12 +95,12 @@ public abstract class AbstractParser implements Parser
 		}
 		catch (IOException e)
 		{
-			System.out.println("Unable to read file " + filePath);
+			System.err.println("Unable to read file " + filePath);
 			e.printStackTrace();
 		}
 		catch (NullPointerException e)
 		{
-			System.out.println("Unable to find file, check file path");
+			System.err.println("Unable to find file, check file path");
 			e.printStackTrace();
 		}
 		finally
@@ -64,7 +113,7 @@ public abstract class AbstractParser implements Parser
 				}
 				catch (IOException e)
 				{
-					System.out.println("Unable to close file " + filePath);
+					System.err.println("Unable to close file " + filePath);
 					e.printStackTrace();
 				}
 			}

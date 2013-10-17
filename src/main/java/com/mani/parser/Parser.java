@@ -10,4 +10,6 @@ import java.util.List;
 public interface Parser
 {
 	public List<Node> doParse();
+
+	public boolean marshaller(List<Node> nodes);
 }
