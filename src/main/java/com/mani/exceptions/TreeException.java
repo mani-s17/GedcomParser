@@ -6,6 +6,10 @@ package com.mani.exceptions;
  * Date: 10/17/13
  * Time: 11:37 AM
  */
+
+/**
+ * This exception will be thrown while constructing tree if Root / No node is not available
+ * */
 public class TreeException extends Exception
 {
 	public TreeException()
@@ -16,5 +20,15 @@ public class TreeException extends Exception
 	public TreeException(String message)
 	{
 		super(message);
+	}
+
+	public TreeException(Throwable object)
+	{
+		super(object);
+	}
+
+	public TreeException(String message, Throwable object)
+	{
+		super(message, object);
 	}
 }

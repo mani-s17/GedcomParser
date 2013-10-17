@@ -1,13 +1,11 @@
 package com.mani.parser;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.mani.entity.Node;
-import com.mani.exceptions.MarshalException;
 import com.mani.exceptions.TreeException;
+import com.mani.helper.Constants;
 import com.mani.helper.NodeMarshaller;
 import com.mani.helper.TreeCreator;
 
@@ -16,6 +14,11 @@ import com.mani.helper.TreeCreator;
  * User: Subramaniam S
  * Date: 10/16/13
  */
+
+/**
+ * GEDCOM is the "GEnealogical Data COMmunication" file format. It is a plain-text
+ * electronic format used to transfer genealogical data.
+* */
 public class GedcomParser extends AbstractParser
 {
 	Node root;
@@ -23,7 +26,7 @@ public class GedcomParser extends AbstractParser
 	public GedcomParser()
 	{
 		root = new Node();
-		root.setLevel(-1);
+		root.setLevel(Constants.ROOT_LEVEL);
 		root.setTag("gedcom");
 	}
 
@@ -63,10 +66,10 @@ public class GedcomParser extends AbstractParser
 	public String xmlMarshaller(List<Node> nodes) throws TreeException
 	{
 		Node root = TreeCreator.create(nodes);
-		return encodeNode(root);
+		return doMarshall(root);
 	}
 
-	private String encodeNode(Node node)
+	private String doMarshall(Node node)
 	{
 		StringBuilder xml = new StringBuilder();
 		List<Node> childNodes = node.getChildNodes();
@@ -81,7 +84,7 @@ public class GedcomParser extends AbstractParser
 
 			for (Node childNode : childNodes)
 			{
-				String childXml = encodeNode(childNode);
+				String childXml = doMarshall(childNode);
 				xml.append(childXml);
 			}
 			xml.append(NodeMarshaller.createCloseTag(node));

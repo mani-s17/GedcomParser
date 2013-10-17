@@ -11,58 +11,53 @@ import com.mani.entity.Node;
  * User: Subramaniam S
  * Date: 10/17/13
  */
+
+/**
+ * Helper class to build a hierarchy tree based on levels of each node
+ * */
 public class TreeCreator
 {
-	// TODO add more error handling like the level are not proper/ especially ordering etc.
-
 	/**
-	 * Takes the raw nodes (in order) and links to them each other based on the level.
-	 * thus forming a tree.
-	 * @param nodes
-	 * @return RootNode of the tree.
+	 * @param nodes in order and links to them each other based on level of each node
+	 * @return root node
 	 */
 	public static Node create(List<Node> nodes) throws TreeException
 	{
 		if (nodes.isEmpty())
-			throw new TreeException("node list cannot be empty");
+			throw new TreeException("No nodes found to build tree");
+
+		if (!nodes.get(0).isRootNode())
+			throw new TreeException("First node should be root node with level -1");
 
 		Node rootNode = nodes.get(0);
-		if (rootNode.getLevel() != -1)
-			throw new TreeException("first node should be the root node");
-
 		Stack<Node> rootStack = new Stack<Node>();
 
 		Node previousNode = rootNode;
-		int previousLevel = -1;
+		int previousLevel = rootNode.getLevel();
 
 		for (int i = 1; i < nodes.size(); i++)
 		{
-			Node presentNode = nodes.get(i);
-			int presentLevel = presentNode.getLevel();
+			Node currentNode = nodes.get(i);
+			int currentLevel = currentNode.getLevel();
 
-				// if level increases push the previous element to root stack
-			if (presentLevel > previousLevel) {
+			if (currentLevel > previousLevel)
+			{
+				// if level increases push the previous node to root stack
 				rootStack.push(previousNode);
 			}
-
-			// if level decreases, pop the current root.
-			else if (presentLevel < previousLevel)
+			else if (currentLevel < previousLevel)
 			{
-				while(presentLevel <= rootStack.peek().getLevel())
-				{
+				// if level decreases, pop the current node
+				while(currentLevel <= rootStack.peek().getLevel())
 					rootStack.pop();
-				}
 			}
 
-			// get the current root.
-			Node currentRoot = rootStack.peek();
-			// set the root.
-			presentNode.setParentNode(currentRoot);
-			// add child to the root nodes.
-			currentRoot.addChildNode(presentNode);
+			Node tempRoot = rootStack.peek();
+			currentNode.setParentNode(tempRoot);
+			tempRoot.addChildNode(currentNode);
 
-			previousLevel = presentLevel;
-			previousNode = presentNode;
+			previousNode = currentNode;
+			previousLevel = currentLevel;
 		}
 		return rootNode;
 	}

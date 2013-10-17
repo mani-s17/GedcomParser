@@ -3,11 +3,17 @@ package com.mani.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mani.helper.Constants;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Subramaniam S
  * Date: 10/16/13
  */
+
+/**
+ * Model which holds all information related to xml file
+ * */
 public class Node
 {
 	private int level;
@@ -76,5 +82,10 @@ public class Node
 	public void addChildNode(Node nodes)
 	{
 		this.childNodes.add(nodes);
+	}
+
+	public boolean isRootNode()
+	{
+		return this.level == Constants.ROOT_LEVEL;
 	}
 }

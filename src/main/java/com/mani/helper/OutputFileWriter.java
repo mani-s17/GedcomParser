@@ -9,10 +9,16 @@ import java.io.IOException;
  * Created with IntelliJ IDEA.
  * User: Subramaniam S
  * Date: 10/17/13
- * Time: 4:33 PM
  */
+
+/**
+ * Contains helper methods to write xml content into file
+ * */
 public class OutputFileWriter
 {
+	/**
+	 * Method for writing xml content into file
+	 * */
 	public void writeFile(String filePath, String fileContent)
 	{
 		File outputFile = new File(filePath);
@@ -31,7 +37,7 @@ public class OutputFileWriter
 		}
 		catch (NullPointerException e)
 		{
-			System.err.println("Unable to find file, check file path");
+			System.err.println("File not found. Check file path " + outputFile.getAbsolutePath());
 			e.printStackTrace();
 		}
 		finally

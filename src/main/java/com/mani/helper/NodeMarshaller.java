@@ -7,6 +7,10 @@ import com.mani.entity.Node;
  * User: Subramaniam S
  * Date: 10/17/13
  */
+
+/**
+ * Helper class to Marshal processed node to XML Tags
+* */
 public class NodeMarshaller
 {
 	public static String createOpenTag(Node node)

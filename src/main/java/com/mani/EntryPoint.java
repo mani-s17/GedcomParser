@@ -12,6 +12,10 @@ import com.mani.parser.Parser;
  * User: Subramaniam S
  * Date: 10/16/13
  */
+
+/**
+ * Entry point for Gedcom Parser / Any type of Parser
+* */
 public class EntryPoint
 {
 	public static void main(String[] args) throws TreeException, MarshalException, IOException
