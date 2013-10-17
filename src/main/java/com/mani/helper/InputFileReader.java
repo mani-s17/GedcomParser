@@ -42,11 +42,13 @@ public class InputFileReader
 		{
 			System.err.println("Unable to read file " + filePath);
 			e.printStackTrace();
+			System.exit(0);
 		}
 		catch (NullPointerException e)
 		{
 			System.err.println("File not found. Check file path " + filePath);
 			e.printStackTrace();
+			System.exit(0);
 		}
 		finally
 		{
