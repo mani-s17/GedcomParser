@@ -7,7 +7,7 @@ import com.mani.entity.Node;
 import com.mani.exceptions.TreeException;
 import com.mani.helper.Constants;
 import com.mani.helper.NodeMarshaller;
-import com.mani.helper.TreeCreator;
+import com.mani.helper.TreeBuilder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +18,7 @@ import com.mani.helper.TreeCreator;
 /**
  * GEDCOM is the "GEnealogical Data COMmunication" file format. It is a plain-text
  * electronic format used to transfer genealogical data.
-* */
+ */
 public class GedcomParser extends AbstractParser
 {
 	Node root;
@@ -33,21 +33,22 @@ public class GedcomParser extends AbstractParser
 	@Override
 	public List<Node> convertRawDataToNode(List<String> lines)
 	{
+		//TODO: Add validations for data and move Unique Identifier delimiter to generic place
 		List<Node> nodes = new ArrayList<Node>();
 		nodes.add(root);
-		for(String line : lines)
+		for (String line : lines)
 		{
-			if(line != null && line.trim().compareTo("") != 0)
+			if (line != null && line.trim().compareTo("") != 0)
 			{
 				String[] tokens = line.split("\\s+", 3);
 				Node node = new Node();
 				node.setLevel(Integer.parseInt(tokens[0]));
-				if(tokens[1].startsWith("@") && tokens[1].endsWith("@"))
+				if (tokens[1].startsWith("@") && tokens[1].endsWith("@"))
 				{
 					node.setId(tokens[1]);
 					node.setTag(tokens[2].toLowerCase());
 				}
-				else if(tokens.length == 3)
+				else if (tokens.length == 3)
 				{
 					node.setTag(tokens[1].toLowerCase());
 					node.setValue(tokens[2]);
@@ -65,8 +66,9 @@ public class GedcomParser extends AbstractParser
 	@Override
 	public String xmlMarshaller(List<Node> nodes) throws TreeException
 	{
-		Node root = TreeCreator.create(nodes);
-		return doMarshall(root);
+		Node root = TreeBuilder.buildTree(nodes);
+		String xmlContent = doMarshall(root);
+		return xmlContent.trim();
 	}
 
 	private String doMarshall(Node node)

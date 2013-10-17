@@ -10,19 +10,24 @@ import com.mani.entity.Node;
 
 /**
  * Helper class to Marshal processed node to XML Tags
-* */
+ */
 public class NodeMarshaller
 {
+	// TODO: Marshall empty body Tag as <Tag/> instead of <Tag></Tag>
 	public static String createOpenTag(Node node)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(getIntention(node));
 		stringBuilder.append("<" + node.getTag());
 
-		if(node.getId() != null)
+		if (node.getId() != null)
+		{
 			stringBuilder.append(" id=\"" + node.getId() + "\"");
-		if(node.getValue() != null)
+		}
+		if (node.getValue() != null)
+		{
 			stringBuilder.append(" value=\"" + node.getValue() + "\"");
+		}
 
 		stringBuilder.append(">\n");
 		return stringBuilder.toString();
@@ -41,8 +46,10 @@ public class NodeMarshaller
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(getIntention(node));
 		stringBuilder.append("<" + node.getTag() + ">");
-		if(node.getValue() != null)
+		if (node.getValue() != null)
+		{
 			stringBuilder.append(node.getValue());
+		}
 		stringBuilder.append("</" + node.getTag() + ">\n");
 		return stringBuilder.toString();
 	}
@@ -50,7 +57,7 @@ public class NodeMarshaller
 	private static String getIntention(Node node)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
-		for (int i=0; i< node.getLevel()+1; i++)
+		for (int i = 0; i < node.getLevel() + 1; i++)
 		{
 			stringBuilder.append("\t");
 		}

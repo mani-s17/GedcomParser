@@ -14,14 +14,14 @@ import java.util.List;
 
 /**
  * Contains helper methods to load raw input data from file to memory
- * */
+ */
 public class InputFileReader
 {
 
 	/**
 	 * Method for reading input file and load each line of file into list.
 	 * File content should not be greater than Maxvalue of Integer (2147483647)
-	 * */
+	 */
 	public List<String> readFile(String filePath)
 	{
 		List<String> fileStrings = new ArrayList<String>();

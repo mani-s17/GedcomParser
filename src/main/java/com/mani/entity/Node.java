@@ -13,7 +13,7 @@ import com.mani.helper.Constants;
 
 /**
  * Model which holds all information related to xml file
- * */
+ */
 public class Node
 {
 	private int level;
@@ -23,6 +23,18 @@ public class Node
 
 	private Node parentNode;
 	private List<Node> childNodes = new ArrayList<Node>();
+
+	public Node()
+	{
+	}
+
+	public Node(int level, String id, String tag, String value)
+	{
+		this.level = level;
+		this.id = id;
+		this.tag = tag;
+		this.value = value;
+	}
 
 	public int getLevel()
 	{

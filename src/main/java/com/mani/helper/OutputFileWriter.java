@@ -13,12 +13,12 @@ import java.io.IOException;
 
 /**
  * Contains helper methods to write xml content into file
- * */
+ */
 public class OutputFileWriter
 {
 	/**
 	 * Method for writing xml content into file
-	 * */
+	 */
 	public void writeFile(String filePath, String fileContent)
 	{
 		File outputFile = new File(filePath);
@@ -26,7 +26,9 @@ public class OutputFileWriter
 		try
 		{
 			if (!outputFile.exists())
+			{
 				outputFile.createNewFile();
+			}
 			bw = new BufferedWriter(new FileWriter(outputFile.getAbsoluteFile()));
 			bw.write(fileContent);
 		}

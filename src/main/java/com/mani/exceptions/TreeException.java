@@ -4,12 +4,11 @@ package com.mani.exceptions;
  * Created with IntelliJ IDEA.
  * User: Subramaniam S
  * Date: 10/17/13
- * Time: 11:37 AM
  */
 
 /**
  * This exception will be thrown while constructing tree if Root / No node is not available
- * */
+ */
 public class TreeException extends Exception
 {
 	public TreeException()

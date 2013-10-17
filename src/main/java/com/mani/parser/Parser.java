@@ -1,8 +1,5 @@
 package com.mani.parser;
 
-import java.io.IOException;
-
-import com.mani.exceptions.MarshalException;
 import com.mani.exceptions.TreeException;
 
 /**
@@ -13,8 +10,8 @@ import com.mani.exceptions.TreeException;
 
 /**
  * Interface to parse data file to xml file
-* */
+ */
 public interface Parser
 {
-	public void doParse(String inputFilePath) throws MarshalException, TreeException, IOException;
+	public String doParse(String inputFilePath) throws TreeException;
 }

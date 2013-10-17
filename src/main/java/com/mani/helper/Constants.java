@@ -8,7 +8,7 @@ package com.mani.helper;
 
 /**
  * Holds all constant values which are used by parsers
-* */
+ */
 public class Constants
 {
 	public static final int ROOT_LEVEL = -1;
