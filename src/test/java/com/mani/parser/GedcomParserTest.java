@@ -17,7 +17,7 @@ public class GedcomParserTest extends TestCase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		parser = new GedcomParser("/CompleteData.txt");
+		parser = new GedcomParser("/sampleData.txt");
 	}
 
 	public void testDoParse() throws Exception

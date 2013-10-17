@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
+import com.mani.exceptions.MarshalException;
+import com.mani.exceptions.TreeException;
+import com.mani.helper.TreeCreator;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Subramaniam S
@@ -57,57 +61,42 @@ public class GedcomParser extends AbstractParser
 	}
 
 	@Override
-	public void xmlMarshaller(List<Node> nodes, BufferedWriter bw) throws IOException
+	public void xmlMarshaller(List<Node> nodes, BufferedWriter bw) throws IOException, TreeException, MarshalException
 	{
-		Stack<Node> nodeStack = new Stack<Node>();
-		Queue<Node> nodeQueue = new LinkedList<Node>();
+		Node root = TreeCreator.create(this.root, nodes);
 
-		bw.append(getOpenNode(root));
-		Node current, previous = root;
+		if (!isRootNode(root))
+			throw new MarshalException("No root node found");
 
-		for(Node node : nodes)
-		{
-			current = node;
-			if(nodeStack.isEmpty() || current.getLevel() > previous.getLevel())
-			{
-				nodeQueue.add(current);
-				nodeStack.push(current);
-			}
-			else if(current.getLevel() == previous.getLevel())
-			{
-				while (!nodeQueue.isEmpty())
-				{
-					if(current.getLevel() != nodeQueue.peek().getLevel())
-						bw.append(getOpenNode(nodeQueue.remove()));
-					else
-					{
-						bw.append(getChildNode(nodeQueue.remove()));
-						nodeStack.pop();
-					}
-				}
-
-				bw.append(getChildNode(current));
-			}
-			else if(current.getLevel() < previous.getLevel())
-			{
-				while (!nodeStack.isEmpty() && current.getLevel() <= nodeStack.peek().getLevel())
-				{
-					bw.append(getCloseNode(nodeStack.pop()));
-				}
-				bw.append(getChildNode(current));
-			}
-			previous = current;
-		}
-
-		while (!nodeStack.isEmpty())
-		{
-			bw.append(getCloseNode(nodeStack.pop()));
-		}
-
-		bw.append(getCloseNode(root));
+		bw.write(encodeNode(root));
 	}
 
-	private String getOpenNode(Node node)
+	private String encodeNode(Node node)
+	{
+		StringBuilder xml = new StringBuilder();
+		List<Node> childNodes = node.getChildNodes();
+
+		if (childNodes.isEmpty())
+		{
+			xml.append(createChildTag(node));
+		}
+		else
+		{
+			xml.append(createOpenTag(node));
+
+			for (Node childNode : childNodes)
+			{
+				String childXml = encodeNode(childNode);
+				xml.append(childXml);
+			}
+
+			xml.append(createCloseTag(node));
+		}
+
+		return xml.toString();
+	}
+
+	private String createOpenTag(Node node)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(getIntention(node));
@@ -122,7 +111,7 @@ public class GedcomParser extends AbstractParser
 		return stringBuilder.toString();
 	}
 
-	private String getCloseNode(Node node)
+	private String createCloseTag(Node node)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(getIntention(node));
@@ -130,7 +119,7 @@ public class GedcomParser extends AbstractParser
 		return stringBuilder.toString();
 	}
 
-	private String getChildNode(Node node)
+	private String createChildTag(Node node)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(getIntention(node));
@@ -149,5 +138,10 @@ public class GedcomParser extends AbstractParser
 			stringBuilder.append("\t");
 		}
 		return stringBuilder.toString();
+	}
+
+	private boolean isRootNode(Node node)
+	{
+		return node.getLevel() == -1;
 	}
 }

@@ -1,5 +1,8 @@
 package com.mani.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Subramaniam S
@@ -11,6 +14,9 @@ public class Node
 	private String id;
 	private String tag;
 	private String value;
+
+	private Node parentNode;
+	private List<Node> childNodes = new ArrayList<Node>();
 
 	public int getLevel()
 	{
@@ -50,5 +56,25 @@ public class Node
 	public void setValue(String value)
 	{
 		this.value = value;
+	}
+
+	public Node getParentNode()
+	{
+		return parentNode;
+	}
+
+	public void setParentNode(Node parentNode)
+	{
+		this.parentNode = parentNode;
+	}
+
+	public List<Node> getChildNodes()
+	{
+		return childNodes;
+	}
+
+	public void addChildNode(Node nodes)
+	{
+		this.childNodes.add(nodes);
 	}
 }

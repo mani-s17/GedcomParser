@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mani.exceptions.MarshalException;
+import com.mani.exceptions.TreeException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Subramaniam S
@@ -30,7 +33,7 @@ public abstract class AbstractParser implements Parser
 	}
 
 	@Override
-	public boolean marshaller(List<Node> nodes)
+	public boolean marshaller(List<Node> nodes) throws TreeException, MarshalException
 	{
 		String outputFilePath = this.getClass().getResource(inputFilePath).getFile().split("\\.(?=[^\\.]+$)")[0] + "_output.xml";
 		File outputFile = new File(outputFilePath);
@@ -75,7 +78,7 @@ public abstract class AbstractParser implements Parser
 
 	public abstract List<Node> doParseNodes(List<String> lines);
 
-	public abstract void xmlMarshaller(List<Node> nodes, BufferedWriter bw) throws IOException;
+	public abstract void xmlMarshaller(List<Node> nodes, BufferedWriter bw) throws IOException, TreeException, MarshalException;
 
 	private List<String> readFile(String filePath, int limitCount)
 	{
