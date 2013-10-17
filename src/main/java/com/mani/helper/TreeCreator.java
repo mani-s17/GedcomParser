@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.mani.exceptions.TreeException;
-import com.mani.parser.Node;
+import com.mani.entity.Node;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,12 +21,12 @@ public class TreeCreator
 	 * @param nodes
 	 * @return RootNode of the tree.
 	 */
-	public static Node create(Node root, List<Node> nodes) throws TreeException
+	public static Node create(List<Node> nodes) throws TreeException
 	{
 		if (nodes.isEmpty())
 			throw new TreeException("node list cannot be empty");
 
-		Node rootNode = root;
+		Node rootNode = nodes.get(0);
 		if (rootNode.getLevel() != -1)
 			throw new TreeException("first node should be the root node");
 
@@ -35,7 +35,7 @@ public class TreeCreator
 		Node previousNode = rootNode;
 		int previousLevel = -1;
 
-		for (int i = 0; i < nodes.size(); i++)
+		for (int i = 1; i < nodes.size(); i++)
 		{
 			Node presentNode = nodes.get(i);
 			int presentLevel = presentNode.getLevel();

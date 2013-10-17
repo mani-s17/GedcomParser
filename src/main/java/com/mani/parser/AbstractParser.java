@@ -1,16 +1,13 @@
 package com.mani.parser;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.mani.entity.Node;
 import com.mani.exceptions.MarshalException;
 import com.mani.exceptions.TreeException;
+import com.mani.helper.InputFileReader;
+import com.mani.helper.OutputFileWriter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,108 +16,20 @@ import com.mani.exceptions.TreeException;
  */
 public abstract class AbstractParser implements Parser
 {
-	private final String inputFilePath;
-
-	AbstractParser(String inputFilePath)
-	{
- 		this.inputFilePath = inputFilePath;
-	}
+	InputFileReader fileReader = new InputFileReader();
+	OutputFileWriter fileWriter = new OutputFileWriter();
 
 	@Override
-	public List<Node> doParse()
+	public void doParse(String inputFilePath) throws MarshalException, TreeException, IOException
 	{
-		return doParseNodes(readFile(inputFilePath, Integer.MAX_VALUE));
+		List<String> rawDataList = fileReader.readFile(inputFilePath, Integer.MAX_VALUE);
+		List<Node> nodeList = convertRawDataToNode(rawDataList);
+		String outputFilePath = inputFilePath.split("\\.(?=[^\\.]+$)")[0] + "_output.xml";
+		String xmlContent = xmlMarshaller(nodeList);
+		fileWriter.writeFile(outputFilePath, xmlContent);
 	}
 
-	@Override
-	public boolean marshaller(List<Node> nodes) throws TreeException, MarshalException
-	{
-		String outputFilePath = this.getClass().getResource(inputFilePath).getFile().split("\\.(?=[^\\.]+$)")[0] + "_output.xml";
-		File outputFile = new File(outputFilePath);
-		BufferedWriter bw = null;
-		try
-		{
-			if (!outputFile.exists())
-				outputFile.createNewFile();
-			bw = new BufferedWriter(new FileWriter(outputFile.getAbsoluteFile()));
+	public abstract List<Node> convertRawDataToNode(List<String> lines);
 
-			//XMLMarshaller
-			xmlMarshaller(nodes, bw);
-		}
-		catch (IOException e)
-		{
-			System.err.println("Unable to write file " + outputFile.getAbsoluteFile());
-			e.printStackTrace();
-		}
-		catch (NullPointerException e)
-		{
-			System.err.println("Unable to find file, check file path");
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (bw != null)
-			{
-				try
-				{
-					bw.close();
-				}
-				catch (IOException e)
-				{
-					System.err.println("Unable to close file " + outputFile.getAbsoluteFile());
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return true;
-	}
-
-	public abstract List<Node> doParseNodes(List<String> lines);
-
-	public abstract void xmlMarshaller(List<Node> nodes, BufferedWriter bw) throws IOException, TreeException, MarshalException;
-
-	private List<String> readFile(String filePath, int limitCount)
-	{
-		List<String> fileStrings = new ArrayList<String>();
-
-		BufferedReader br = null;
-		try
-		{
-			br = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(filePath)));
-			String line;
-			int lineCount = 0;
-			while ((line = br.readLine()) != null && lineCount < limitCount)
-			{
-				fileStrings.add(line);
-				lineCount++;
-			}
-		}
-		catch (IOException e)
-		{
-			System.err.println("Unable to read file " + filePath);
-			e.printStackTrace();
-		}
-		catch (NullPointerException e)
-		{
-			System.err.println("Unable to find file, check file path");
-			e.printStackTrace();
-		}
-		finally
-		{
-			if (br != null)
-			{
-				try
-				{
-					br.close();
-				}
-				catch (IOException e)
-				{
-					System.err.println("Unable to close file " + filePath);
-					e.printStackTrace();
-				}
-			}
-		}
-		return fileStrings;
-	}
+	public abstract String xmlMarshaller(List<Node> nodes) throws TreeException;
 }

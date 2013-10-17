@@ -1,7 +1,6 @@
 package com.mani.helper;
 
 import com.mani.parser.GedcomParser;
-import com.mani.parser.Node;
 import com.mani.parser.Parser;
 import junit.framework.TestCase;
 
@@ -15,7 +14,7 @@ public class TreeCreatorTest extends TestCase
 {
 	public void testCreate() throws Exception
 	{
-		Parser parser = new GedcomParser("/sampleData.txt");
+		Parser parser = new GedcomParser();
 		//Node root = TreeCreator.create(parser.doParse());
 	}
 }

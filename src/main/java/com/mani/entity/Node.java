@@ -1,4 +1,4 @@
-package com.mani.parser;
+package com.mani.entity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,9 @@
 package com.mani.parser;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.mani.entity.Node;
 import com.mani.exceptions.MarshalException;
 import com.mani.exceptions.TreeException;
 
@@ -12,7 +14,5 @@ import com.mani.exceptions.TreeException;
  */
 public interface Parser
 {
-	public List<Node> doParse();
-
-	public boolean marshaller(List<Node> nodes) throws TreeException, MarshalException;
+	public void doParse(String inputFilePath) throws MarshalException, TreeException, IOException;
 }
